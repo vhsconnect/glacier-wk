@@ -8,11 +8,17 @@ let command = `aws glacier upload-multipart-part --upload-id $UPLOADID --body ch
 let fileSize = 2901833
 let chunksAmount = Math.ceil(fileSize / constant)
 let chunksMaxAmount = 676
-let uploadID = "YGPhcwpNX4EUlf2WDpsmx1pz9jlYTQ9CmN_73zqF1pENEparnefq9elRzFiu1AgofEylWqIqP1WhfiuGis5JyMfLKRor"
+let uploadID = "vFOn7Om6ENrtwFAjab8pl9BqxvRB3OLa5q85bTPVYJMS8iOOUG-7NzkCsSbvvWla_wPSw6-5oy2AKiBR7VUirjj_xkGd" 
 let vault = 'vault58'
+let path = './yacht.png.zip'
+
+function splitZip(path, os){
+  if (os === 'mac') shell.exec(`split -b ${constant} ${path}`)
+  else console.log('only work with mac right now')
+}
 
 //array of start and end points in bytes of each section
-function arrayOfRanges2(initial, range, revolutions) {
+function arrayOfRanges(initial, range, revolutions) {
   let ranges = []
   let arr = [];
   let total = fileSize
@@ -62,47 +68,45 @@ function appendToFile(destination, commandList) {
   commandList.forEach((x) => fs.appendFileSync(destination, x + '\n'))
 }
 
-let checksums = []
-function exe(commandList) {
-  console.log(commandList)
-  return commandList.forEach(each => shell.exec(each, {}, (x,y,z) => {
-  checksums.push((JSON.parse(y)).checksum)
-  })
-  )
- // checksum function goes here  
-} 
-
 function checksumTree(arr){
-  let hashed = arr.map((x,y)=> `openssl dgst -sha256 -binary ${x} > ${'hash' + y}`)
-  hashed.forEach(x => shell.exec(x))  
+  arr.map((x,y)=> `openssl dgst -sha256 -binary ${x} > ${'hash' + y}`).forEach(x => shell.exec(x))  
 }
 
-async function end(op){
-  let rangesArr = arrayOfRanges2(0, constant, 3)
+function sumAllAndHash(){
+  let stop = 0
+  let hashRefs = chunks(chunksAmount).map((x,y) => 'hash' + y) 
+  let first = hashRefs.shift();
+  let refs = hashRefs
+  refs.reduce((acc, each, i)=> {
+    shell.exec(`cat ${acc} ${each} > ${'qqq' + i}`)
+    if (stop === 1) shell.exec(`openssl dgst -sha256 ${'qqq' + i} > ${'vvv' + i}`) 
+    else shell.exec(`openssl dgst -sha256 -binary ${'qqq' + i} > ${'vvv' + i}`)
+    stop++
+    return 'vvv' + i
+  }, first)
+}
+
+function end(op){
+  console.log('splitting file to chunks')
+  splitZip(path, 'mac')
+  console.log('calculating Ranges')
+  let rangesArr = arrayOfRanges(0, constant, 3)
   let chunksArr = chunks(chunksAmount)
+  console.log('creating uploading commands')
   let commandList = cList(vault, rangesArr, chunksArr, uploadID)
   if (op === 'append'){
     appendToFile('./testing', commandList)
   }
-  else exe(commandList)
+  console.log('executing upload commands')
+  commandList.forEach(each => shell.exec(each))
+  //hash all chunks
+  console.log('creating hashes')
+  checksumTree(chunks(chunksAmount))
+  console.log('creating hash of concatenated hashes')
+  sumAllAndHash()
 }
 
-let hashRefs = chunks(chunksAmount).map((x,y) => 'hash' + y) 
-
-function ee(arr){
-  let first = arr.shift();
-  let refs = arr
-  refs.reduce((acc, each, i)=> {
-    shell.exec(`cat ${acc} ${each} > ${'qqq' + i}`)
-    shell.exec(`openssl dgst -sha256 -binary ${'qqq' + i} > ${'vvv' + i}`)
-    return 'vvv' + i
-  }, first)
-}
-checksumTree(chunks(chunksAmount))
-ee(hashRefs)
-// end('')
-
-
+end('')
 
 
 
