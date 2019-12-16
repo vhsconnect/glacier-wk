@@ -5,7 +5,7 @@
 
 - get job-ids from an inventory : inventory-retrivel
 ```console
-aws glacier initiate-job --account-id - --vault-name my-vault --job-parameters '{"Type": "inventory-retrieval"}'
+aws glacier initiate-job --account-id - --vault-name vault58 --job-parameters '{"Type": "inventory-retrieval"}'
 ```
 
 - retrieving an archive: Initiatizing an Archive Retrival job
@@ -22,3 +22,28 @@ aws glacier initiate-job --account-id - --vault-name my-vault --job-parameters f
 }
 ```
 -> you'll need to create and specify an sns topic for aws to notify you when the job is complete
+
+- list all jobs
+```console
+aws glacier list-jobs --account-id - --vault-name my-vault
+```
+Get job info / status
+```console
+aws glacier describe-job --account-id - --vault-name my-vault --job-id zbxcm3Z_3z5UkoroF7SuZKrxgGoDc3RloGduS7Eg-RO47Yc6FxsdGBgf_Q2DK5Ejh18CnTS5XW4_XqlNHS61dsO4CnMW
+```
+confirm a job's final hash
+
+```console
+aws glacier complete-multipart-upload --checksum $TREEHASH --archive-size 3145728 --upload-id $UPLOADID --account-id - --vault-name vault58
+```
+
+describe the vault
+```console
+aws glacier describe-vault --account-id - --vault-name myvault
+```
+
+
+download archive
+```console
+aws glacier get-job-output --account-id - --vault-name vault58 --job-id "" output.zip
+```
