@@ -2,6 +2,7 @@ const readline = require('readline');
 const initiate = require('./initiate');
 const rJ = require('./rJson');
 const upload = require('./upload');
+const prompt = require('./prompt.js')
 let rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -22,25 +23,9 @@ const configPairs = [
   ['give a desciption to your archive\n', 'desc'],
 ];
 
-function prompt(arr) {
-  let pair = arr.shift();
-  function runQ(pair) {
-    if (!pair) runU();
-    else {
-      rl.question(pair[0], ans => {
-        config[pair[1]] = ans;
-        return prompt(arr);
-      });
-    }
-  }
-  runQ(pair);
-}
-
-function runU() {
+prompt(configPairs, (config) => {
   initiate.init(config);
   config.uploadId = rJ('init.json').uploadId;
   upload.uploadAndConfirm(config);
-  rl.close();
-}
+})
 
-prompt(configPairs);
