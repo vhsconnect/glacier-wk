@@ -1,6 +1,0 @@
-{
-  "Type": "archive-retrieval",
-  "ArchiveId": "kKB7ymWJVpPSwhGP6ycSOAekp9ZYe_--zM_mw6k76ZFGEIWQX-ybtRDvc2VkPSDtfKmQrj0IRQLSGsNuDp-AJVlu2ccmDSyDUmZwKbwbpAdGATGDiB3hHO0bjbGehXTcApVud_wyDw",
-  "Description": "Retrieve archive on Dec 8th",
-  "SNSTopic": "arn:aws:sns:us-west-2:0123456789012:my-topic"
-}

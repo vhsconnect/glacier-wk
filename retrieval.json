@@ -1,6 +1,0 @@
-{
-  "Type": "archive-retrieval",
-  "ArchiveId": "8S3WvNdKCD_MYmxjxkdfFyoJQgvR0TMSDw7enRgtqBb8EAtYK-ESVxGkeW_MYWpHBcZSIpFx0s-oMVBkTOLcMVa1xV5HpmBLzRssaoBTvsrENVDIgWkCACFODXGooqiSx9HHH5akdA",
-  "Description": "Retrieve archive on DEC 15th - yacht final",
-  "SNSTopic": "arn:aws:sns:eu-west-1:335373271360:archiverequest"
-}

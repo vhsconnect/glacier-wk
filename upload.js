@@ -14,7 +14,7 @@ const shell = require('shelljs');
 
 let u = {};
 
-u.splitZip = (path, constant, os) => {
+u.splitZip = function(path, constant, os) {
   if (os === 'mac') shell.exec(`split -b ${constant} ${path}`);
   else console.log('only work with mac right now');
 };
@@ -37,7 +37,7 @@ u.arrayOfRanges = (initial, range, revolutions, constant, fileSize) => {
   }
   chunkTheArray(total);
   arr.forEach((range, index) =>
-    ranges.push(index * constant, index * constant + Number(range) - 1)
+    ranges.push(index * constant, index * constant + Number(range) - 1),
   );
   console.log('ranges', ranges);
   return ranges;
@@ -78,7 +78,6 @@ u.checksumTree = arr => {
 u.sumAllAndHash = function(fileSize, constant, config) {
   let modConfig = {...config};
   let checksumFile;
-  let stop = 0;
   let hashRefs = this.chunks(Math.ceil(fileSize / constant)).map(
     (x, y) => 'hash' + y,
   );
@@ -86,12 +85,14 @@ u.sumAllAndHash = function(fileSize, constant, config) {
   let refs = hashRefs;
   refs.reduce((acc, each, i) => {
     shell.exec(`cat ${acc} ${each} > ${'qqq' + i}`);
-    if (stop === 1)
+    if (refs.length - 1 === i) {
       shell.exec(`openssl dgst -sha256 ${'qqq' + i} > ${'vvv' + i}`);
-    else shell.exec(`openssl dgst -sha256 -binary ${'qqq' + i} > ${'vvv' + i}`);
-    stop++;
-    if (refs.length - 1 === i) checksumFile = 'vvv' + i;
-    return 'vvv' + i;
+      checksumFile = 'vvv' + i;
+      return;
+    } else {
+      shell.exec(`openssl dgst -sha256 -binary ${'qqq' + i} > ${'vvv' + i}`);
+      return 'vvv' + i;
+    }
   }, first);
   modConfig.checksumFile = checksumFile;
   return modConfig;
@@ -120,7 +121,7 @@ u.runUpload = function(config) {
   console.log('creating hashes');
   this.checksumTree(chunksArr);
   console.log('creating hash of concatenated hashes');
-  this.sumAllAndHash(fileSize, constant, config);
+  return this.sumAllAndHash(fileSize, constant, config);
 };
 
 u.pipe = function(fns, value) {
@@ -128,12 +129,14 @@ u.pipe = function(fns, value) {
 };
 
 u.confirmChecksum = function(config) {
+  console.log('config', config);
+  console.log('checksumFile is ', config.checksumFile);
   let archiveID = fs
     .readFileSync(config.checksumFile, 'utf-8')
     .split(' ')[1]
     .replace('\\n', '');
   shell.exec(
-    `aws glacier complete-multipart-upload --checksum ${archiveID} --archive-size ${config.fileSize} --upload-id ${config.uploadId} --account-id - --vault-name ${config.vault}`,
+    `aws glacier complete-multipart-upload --checksum ${archiveID} --archive-size ${config.fileSize} --upload-id ${config.uploadId} --account-id - --vault-name ${config.vault}`
   );
 };
 
@@ -141,4 +144,7 @@ u.confirmChecksum = function(config) {
 u.uploadAndConfirm = function(config) {
   this.pipe([this.runUpload, this.confirmChecksum], config);
 };
+
+u.runUpload = u.runUpload.bind(u);
+u.confirmChecksum = u.confirmChecksum.bind(u);
 module.exports = u;

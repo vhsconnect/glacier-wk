@@ -2,12 +2,7 @@ const readline = require('readline');
 const initiate = require('./initiate');
 const rJ = require('./rJson');
 const upload = require('./upload');
-const prompt = require('./prompt.js')
-let rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
+const p = require('./prompt.js')
 const config = {};
 const configPairs = [
   ['how big is the zip file in bytes\n', 'fileSize'],
@@ -23,7 +18,8 @@ const configPairs = [
   ['give a desciption to your archive\n', 'desc'],
 ];
 
-prompt(configPairs, (config) => {
+console.log(p)
+p(configPairs, (config) => {
   initiate.init(config);
   config.uploadId = rJ('init.json').uploadId;
   upload.uploadAndConfirm(config);

@@ -6,8 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "upload": "node handler.js",
-    "initRetrieve": "",
-    "retrive": ""
+    "inventory": "node inventory.js",
+    "archiveIds": "node archiveIds.js",
+    "initRetrieval": "node initRetrieval.js",
+    "retrieve": "node retrieve.js"
   },
   "author": "",
   "license": "ISC",
