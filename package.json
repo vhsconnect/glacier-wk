@@ -1,8 +1,8 @@
 {
   "name": "glacier-wk",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "temp.js",
+  "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "upload": "node handler.js",
@@ -11,7 +11,7 @@
     "initRetrieval": "node initRetrieval.js",
     "retrieve": "node retrieve.js"
   },
-  "author": "",
+  "author": "vhsconnect",
   "license": "ISC",
   "dependencies": {
     "aws-sign2": "^0.7.0",
