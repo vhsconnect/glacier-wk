@@ -7,7 +7,7 @@
 - get job-ids from an inventory : inventory-retrivel
 
 ```console
-aws glacier initiate-job --account-id - --vault-name vault58 --job-parameters '{"Type": "inventory-retrieval"}'
+aws glacier initiate-job --account-id - --vault-name my-vault --job-parameters '{"Type": "inventory-retrieval"}'
 ```
 
 - list all jobs
@@ -25,7 +25,7 @@ aws glacier describe-job --account-id - --vault-name my-vault --job-id zbxcm3Z_3
 confirm a job's final hash
 
 ```console
-aws glacier complete-multipart-upload --checksum $TREEHASH --archive-size 3145728 --upload-id $UPLOADID --account-id - --vault-name vault58
+aws glacier complete-multipart-upload --checksum $TREEHASH --archive-size 3145728 --upload-id $UPLOADID --account-id - --vault-name my-vault
 ```
 
 describe the vault
