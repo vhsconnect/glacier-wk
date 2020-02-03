@@ -12,11 +12,8 @@
     "retrieve": "node retrieve.js"
   },
   "author": "vhsconnect",
-  "license": "ISC",
+  "license": "BSD 3",
   "dependencies": {
-    "aws-sign2": "^0.7.0",
-    "aws4": "^1.9.0",
-    "request": "^2.88.0",
     "shelljs": "^0.8.3"
   }
 }
