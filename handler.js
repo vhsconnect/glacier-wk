@@ -2,7 +2,7 @@ const readline = require('readline');
 const initiate = require('./initiate');
 const rJ = require('./rJson');
 const upload = require('./upload');
-const p = require('./prompt.js')
+const p = require('./prompt.js');
 const config = {};
 const configPairs = [
   ['how big is the zip file in bytes\n', 'fileSize'],
@@ -16,12 +16,11 @@ const configPairs = [
   ],
   ['Provide the path to the zip file\n', 'path'],
   ['give a desciption to your archive\n', 'desc'],
+  ['single offset mode? default is no, enter offset if yes', 'offset'],
 ];
 
-console.log(p)
-p(configPairs, (config) => {
+p(configPairs, config => {
   initiate.init(config);
   config.uploadId = rJ('init.json').uploadId;
   upload.uploadAndConfirm(config);
-})
-
+});

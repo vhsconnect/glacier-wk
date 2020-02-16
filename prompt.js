@@ -6,21 +6,21 @@ function prompt(arr, cb) {
     input: process.stdin,
     output: process.stdout,
   });
-  return function q() {
+  return (function questions() {
     let pair = arr.shift();
-    function runQ(pair) {
+    function runEach(pair) {
       if (!pair) {
         cb(config);
         rl.close();
       } else {
         rl.question(pair[0], ans => {
           config[pair[1]] = ans;
-          return q(arr);
+          return questions(arr);
         });
       }
     }
-  runQ(pair);
-  }();
+    runEach(pair);
+  })();
 }
 
 module.exports = prompt;

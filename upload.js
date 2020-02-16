@@ -3,37 +3,27 @@ const shell = require('shelljs');
 const treehash = require('./treehash.js');
 let u = {};
 
-u.splitZip = function(path, constant, os) {
-  if (os === 'mac') shell.exec(`split -b ${constant} -a 4 ${path} _chunk`);
-  else console.log('only work with mac right now');
+u.splitZip = function(path, constant, prefix) {
+  shell.exec(`split -b ${constant} -a 4 ${path} ${prefix}`);
 };
 
 //array of start and end points in bytes of each section
-u.arrayOfRanges = (initial, range, revolutions, constant, fileSize) => {
+u.arrayOfRanges = (constant, revolutions, fileSize) => {
+  let remainder = fileSize % constant;
   let ranges = [];
-  let arr = [];
-  let total = fileSize;
-  function chunkTheArray(remainder) {
-    if (remainder === 0) return;
-    else if (remainder - constant > 0) {
-      arr.push(constant);
-      remainder = remainder - constant;
-      chunkTheArray(remainder);
-    } else {
-      arr.push(remainder);
-      return;
+  for (let i = 0; i < revolutions; i++) {
+    ranges.push(i * constant);
+    if (i === revolutions - 1) {
+      ranges.push(i * constant + remainder - 1);
+      console.log(ranges);
+      return ranges;
     }
+    ranges.push(i * constant + constant - 1);
   }
-  chunkTheArray(total);
-  arr.forEach((range, index) =>
-    ranges.push(index * constant, index * constant + Number(range) - 1),
-  );
-  console.log('ranges', ranges);
-  return ranges;
 };
 
 // returns array of chunk names
-u.chunks = chunksAmount => {
+u.chunks = (chunksAmount, prefix) => {
   let count = 0;
   let chunkNames = [];
   var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -43,7 +33,7 @@ u.chunks = chunksAmount => {
         for (let l = 0; l < 26; l++) {
           if (count === chunksAmount) return chunkNames;
           chunkNames.push(
-            '_chunk' + alphabet[i] + alphabet[j] + alphabet[k] + alphabet[l],
+            prefix + alphabet[i] + alphabet[j] + alphabet[k] + alphabet[l],
           );
           count++;
         }
@@ -72,24 +62,25 @@ u.appendTreehash = function(chunksArr, config) {
 
 u.runUpload = function(config) {
   const {fileSize, constant, vault, path, desc, uploadId} = config;
-  console.log('calculating number of chunks');
+  console.log('calculating chunks amount');
   let chunksAmount = Math.ceil(fileSize / constant);
-  console.log('splitting file to chunks');
-  this.splitZip(path, constant, 'mac');
-  console.log('calculating Ranges');
-  let rangesArr = this.arrayOfRanges(
-    0,
-    constant,
-    chunksAmount,
-    constant,
-    fileSize,
-  );
-  let chunksArr = this.chunks(chunksAmount);
+  console.log('splitting file for multiplart upload');
+  this.splitZip(path, constant, '_u_');
+  console.log('calculating ranges');
+  let rangesArr = this.arrayOfRanges(Number(constant), chunksAmount, fileSize);
+  let chunksArr = this.chunks(chunksAmount, '_u_');
   console.log('creating uploading commands');
   let commandList = this.cList(vault, rangesArr, chunksArr, uploadId);
   console.log('executing upload commands');
   commandList.forEach(each => shell.exec(each));
-  return this.appendTreehash(chunksArr, config);
+  console.log('cleaning up uploaded chunks');
+  shell.exec(`find . -name '_u_*' | xargs rm`);
+  console.log('splitting file to create final checksum');
+  this.splitZip(path, 1048576, '_h_');
+  let hChunksAmount = Math.ceil(fileSize / 1048576);
+  let hChunksArr = this.chunks(hChunksAmount, '_h_');
+  console.log('calculating checksum');
+  return this.appendTreehash(hChunksArr, config);
 };
 
 u.pipe = function(fns, value) {
@@ -99,13 +90,12 @@ u.pipe = function(fns, value) {
 u.confirmChecksum = function(config) {
   console.log('finalizing upload, confirming checksum');
   shell.exec(
-    `aws glacier complete-multipart-upload --checksum ${config.checksum} --archive-size ${config.fileSize} --upload-id ${config.uploadId} --account-id - --vault-name ${config.vault}`,
+    `aws glacier complete-multipart-upload --checksum ${config.checksum} --archive-size ${config.fileSize} --upload-id ${config.uploadId} --account-id - --vault-name ${config.vault} >> archive-info.json`,
   );
 };
-
 u.cleanup = function() {
-  console.log('cleaning up');
-  shell.exec(`find . -name '_chunk*' | xargs rm -f`);
+  console.log('cleaning up, archive info appended to archive-info.json');
+  shell.exec(`find . -name '_h_*' | xargs rm -f`);
   shell.exec(`rm init.json`);
 };
 
