@@ -16,7 +16,6 @@ const configPairs = [
   ],
   ['Provide the path to the zip file\n', 'path'],
   ['give a desciption to your archive\n', 'desc'],
-  ['single offset mode? default is no, enter offset if yes', 'offset'],
 ];
 
 p(configPairs, config => {
