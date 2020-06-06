@@ -1,14 +1,21 @@
-const readline = require("readline");
-const prompt = require("./prompt.js");
-const shell = require("shelljs");
+const shell = require('shelljs');
+const prompt = require('./prompt.js');
+const readJSON = require('./rJson.js');
 
-let configPairs = [
-  ["What is the vault Name?\n", "vault"],
-  ["What is the job ID?\n", "jobId"],
-];
+module.exports = function () {
+  let jobId;
+  const configPairs = [
+    ['What is the retrieval project name\n', 'projectName'],
+    ['What is the vault Name?\n', 'vault'],
+    ['What would you like to call your downloaded file (include extension)\n', 'file'],
+  ];
 
-prompt(configPairs, (config) => {
-  shell.exec(
-    `aws glacier get-job-output --account-id - --vault-name ${config.vault}  --job-id ${config.jobId} output.zip`
-  );
-});
+  prompt(configPairs, ({ projectName, vault, file }) => {
+    try {
+      jobId = readJSON(`./${projectName}/retrieval.json`).jobId;
+    } catch (e) { console.log('Operation failed, did you run initRetrieval yet?'); }
+    shell.exec(
+      `aws glacier get-job-output --account-id - --vault-name ${vault}  --job-id ${jobId} ${file}`,
+    );
+  });
+};

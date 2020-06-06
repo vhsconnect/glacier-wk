@@ -1,26 +1,29 @@
 const readline = require('readline');
 
 function prompt(arr, cb) {
-  let config = {};
-  let rl = readline.createInterface({
+  const config = {};
+  const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
+  console.log('setting up');
   return (function questions() {
-    let pair = arr.shift();
+    const currentPair = arr.shift();
     function runEach(pair) {
       if (!pair) {
-        cb(config);
         rl.close();
+        cb(config);
       } else {
-        rl.question(pair[0], ans => {
+        console.log('in else about to ask');
+        rl.question(pair[0], (ans) => {
           config[pair[1]] = ans;
-          return questions(arr);
+          return questions();
         });
       }
     }
-    runEach(pair);
-  })();
+    console.log('about to start runEach');
+    runEach(currentPair);
+  }());
 }
 
 module.exports = prompt;

@@ -25,7 +25,7 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 - glacier-wk uses your current aws account and does not accept profile parameters. ```aws --profile```
 - glacier-wk will write and read from vaults in your Default region as set in your aws configuration
 - glacier-wk can not create vaults. You'll need to log into your AWS console and create a vault before being able to upload anything
-- AWS glacier is really cheap but you pay for storage AND retrieval https://aws.amazon.com/s3/pricing/
+- AWS glacier is really cheap but you pay for storage AND retrieval https://aws.amazon.com/s3/pricing/s
 - The official maximum size of an archive to upload is 40TB, but I have only tested with files up to 150GB. 
 - The larger the file is, the larger the chunk size you should select from the prompt to split your file. Chunk size can range from 1Mb to around 2GB. It's recommended you pick the largest possible chunk size.
 
@@ -43,9 +43,9 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 
 ### Retrieving an archive without knowing the archiveId
 
-1. ```npm run inventory [vault-name] [outputFile.json]```
+1. ```npm run inventory [vault-name]```
 2. wait for the inventory file to become available [6 - 24 hrs]
-3. ```npm run archiveIds [vault-name] [outputFile from previous step] [new output file.json]```
+3. ```npm run archiveIds```
 4. Identify the archive you want to download, copy the archiveId and run ```npm run initRetrieval```
 5. Wait a little for the job to become available
 6. retrieve the jobId from the output file and run ```npm run retrieve```
