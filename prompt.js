@@ -6,7 +6,6 @@ function prompt(arr, cb) {
     input: process.stdin,
     output: process.stdout,
   });
-  console.log('setting up');
   return (function questions() {
     const currentPair = arr.shift();
     function runEach(pair) {
@@ -14,14 +13,12 @@ function prompt(arr, cb) {
         rl.close();
         cb(config);
       } else {
-        console.log('in else about to ask');
         rl.question(pair[0], (ans) => {
           config[pair[1]] = ans;
           return questions();
         });
       }
     }
-    console.log('about to start runEach');
     runEach(currentPair);
   }());
 }

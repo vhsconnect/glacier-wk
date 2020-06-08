@@ -54,3 +54,9 @@ aws glacier initiate-job --account-id - --vault-name <my-vault> --job-parameters
 ```console
 aws glacier get-job-output --account-id - --vault-name <vault> --job-id <job-id> output.zip
 ```
+
+- delete archive
+
+```console
+aws glacier delete-archive --vault-name <vault> --account-id - --archive-id *** <archiveID> ***
+```

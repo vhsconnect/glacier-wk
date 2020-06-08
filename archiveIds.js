@@ -18,7 +18,7 @@ module.exports = function () {
       console.log('Have you initiated inventory retrieval yet?, did you use the correct Project name?\n', e);
     }
     shell.exec(
-      `aws glacier get-job-output --account-id - --vault-name ${vaultName} --job-id ${jobId} archiveIds.json`,
+      `aws glacier get-job-output --account-id - --vault-name ${vaultName} --job-id ${jobId} ./${projectName}/archiveIds.json`,
     );
   });
 };

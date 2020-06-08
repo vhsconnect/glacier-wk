@@ -5,7 +5,7 @@ const prompt = require('./prompt.js');
 
 module.exports = function () {
   const configPairs = [
-    ['What is the retrieval project name', 'projectName'],
+    ['What is the retrieval project name\n', 'projectName'],
     ['What is the vault name\n', 'vault'],
     ['What is the ArchiveId\n', 'archiveId'],
     ['Give a description to the Retrieval Initiation job?\n', 'desc'],

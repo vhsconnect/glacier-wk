@@ -43,7 +43,7 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 
 ### Retrieving an archive without knowing the archiveId
 
-1. ```npm run inventory [vault-name]```
+1. ```npm run inventory```
 2. wait for the inventory file to become available [6 - 24 hrs]
 3. ```npm run archiveIds```
 4. Identify the archive you want to download, copy the archiveId and run ```npm run initRetrieval```
