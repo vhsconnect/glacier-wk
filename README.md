@@ -26,8 +26,9 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 - glacier-wk will write and read from vaults in your Default region as set in your aws configuration
 - glacier-wk can not create vaults. You'll need to log into your AWS console and create a vault before being able to upload anything
 - AWS glacier is really cheap but you pay for storage AND retrieval https://aws.amazon.com/s3/pricing/s
-- The official maximum size of an archive to upload is 40TB, but I have only tested with files up to 150GB. 
+- The official maximum size of an archive to upload is 40TB, but I have only tested with files up to 150GB. Please open an issue if a larger file fails to upload.
 - The larger the file is, the larger the chunk size you should select from the prompt to split your file. Chunk size can range from 1Mb to around 2GB. It's recommended you pick the largest possible chunk size.
+- For many of the commands below, you'll find that the cli asks you to provide a project name. This essentially referes to directories that glacier-wk creates to keep all configuration Ids organized and easier to manage.
 
 ## Installation
 
@@ -38,20 +39,31 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 ## Usage
 
 ### Uploading a file 
-1. ```npm run upload```
-2. Follow the prompts
+1. ```npm run glacier```
+2. Pick upload and follow the prompts. 
 
 ### Retrieving an archive without knowing the archiveId
 
-1. ```npm run inventory```
-2. wait for the inventory file to become available [6 - 24 hrs]
-3. ```npm run archiveIds```
-4. Identify the archive you want to download, copy the archiveId and run ```npm run initRetrieval```
-5. Wait a little for the job to become available
-6. retrieve the jobId from the output file and run ```npm run retrieve```
+1. ```npm run glacier```
+2.  pick the vault inventory option and wait for the inventory file to become available [6 - 24 hrs]
+3. ```npm run glacier```
+4. pick the get archive Ids option. 
+5. Navigate to your project directory, Identify the archive you want to download, copy the archiveId.
+6. ```npm run glacier```
+7. pick the initiate retieval option.
+8. Wait a little for the job to become available.
+9. retrieve the jobId from the output file and run ```npm run glacier``` then pick retrieve.
 
 ### Querying contents of your vault
 
-1. Check step 1 and 2 above
+1. Check step 1 and 2 above.
 
+### Querying progress of a job
 
+1. ```npm run glacier```
+2. pick the query job option then provide vault and project name.
+
+### Deleting an archive
+
+1. Once you have your archiveId (steps 1 and 2 from the retrieve routing above) run ```npm run glacier```
+2. pick the query job option then provide vault and project name.
