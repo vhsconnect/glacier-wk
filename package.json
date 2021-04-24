@@ -4,7 +4,7 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --watch",
     "glacier": "node glacier.js",
     "upload": "node handler.js",
     "inventory": "node inventory.js",

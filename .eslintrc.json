@@ -17,6 +17,7 @@
     "no-console": "off",
     "func-names": "off",
     "consistent-return": "off",
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "quotes": ["warn", "single"]
   }
 }
