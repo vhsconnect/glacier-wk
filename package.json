@@ -15,7 +15,7 @@
   "author": "vhsconnect",
   "license": "BSD 3",
   "dependencies": {
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "chai": "^4.3.4",
