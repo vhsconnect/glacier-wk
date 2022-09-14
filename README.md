@@ -12,7 +12,6 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 - No support for single part uploads
 - Uploads, although broken into multiple parts are atomic. You'll need to start the upload over if one part fails
 
-
 ## Requirements
 
 - node ^8.0.0
@@ -22,7 +21,7 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 ## Before you begin
 
 - You must have an AWS account and aws-cli setup and configured on your computer.
-- glacier-wk uses your current aws account and does not accept profile parameters. ```aws --profile```
+- glacier-wk uses your current aws account and does not accept profile parameters. `aws --profile`
 - glacier-wk will write and read from vaults in your Default region as set in your aws configuration
 - glacier-wk can not create vaults. You'll need to log into your AWS console and create a vault before being able to upload anything
 - AWS glacier is really cheap but you pay for storage AND retrieval https://aws.amazon.com/s3/pricing/s
@@ -33,26 +32,26 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 ## Installation
 
 1. clone the repo
-2. ```npm i```
-
+2. `npm i`
 
 ## Usage
 
-### Uploading a file 
-1. ```npm run glacier```
-2. Pick upload and follow the prompts. 
+### Uploading a file
+
+1. `npm run glacier`
+2. Pick upload and follow the prompts.
 
 ### Retrieving an archive without knowing the archiveId
 
-1. ```npm run glacier```
-2.  pick the vault inventory option and wait for the inventory file to become available [6 - 24 hrs]
-3. ```npm run glacier```
-4. pick the get archive Ids option. 
+1. `npm run glacier`
+2. pick the vault inventory option and wait for the inventory file to become available [6 - 24 hrs]
+3. `npm run glacier`
+4. pick the get archive Ids option.
 5. Navigate to your project directory, Identify the archive you want to download, copy the archiveId.
-6. ```npm run glacier```
+6. `npm run glacier`
 7. pick the initiate retieval option.
 8. Wait a little for the job to become available.
-9. retrieve the jobId from the output file and run ```npm run glacier``` then pick retrieve.
+9. retrieve the jobId from the output file and run `npm run glacier` then pick retrieve.
 
 ### Querying contents of your vault
 
@@ -60,10 +59,10 @@ Glacier-wk uses to a node run-time to query your glacier vaults for inventory an
 
 ### Querying progress of a job
 
-1. ```npm run glacier```
+1. `npm run glacier`
 2. pick the query job option then provide vault and project name.
 
 ### Deleting an archive
 
-1. Once you have your archiveId (steps 1 and 2 from the retrieve routing above) run ```npm run glacier```
+1. Once you have your archiveId (steps 1 and 2 from the retrieve routing above) run `npm run glacier`
 2. pick the query job option then provide vault and project name.

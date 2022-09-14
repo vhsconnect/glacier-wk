@@ -1,32 +1,36 @@
 {
   "name": "glacier-wk",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "test": "mocha --watch",
-    "glacier": "node glacier.js",
-    "upload": "node handler.js",
-    "inventory": "node inventory.js",
-    "archiveIds": "node archiveIds.js",
-    "initRetrieval": "node initRetrieval.js",
-    "retrieve": "node retrieve.js"
+    "start": "node src/glacier.js",
+    "test": "mocha",
+    "glacier": "node src/glacier.js",
+    "upload": "node src/handler.js",
+    "inventory": "node src/inventory.js",
+    "archiveIds": "node src/archiveIds.js",
+    "initRetrieval": "node src/initRetrieval.js",
+    "retrieve": "node src/retrieve.js"
+  },
+  "bin": {
+    "glacier": "./src/glacier.js"
   },
   "author": "vhsconnect",
   "license": "BSD 3",
   "dependencies": {
-    "shelljs": "^0.8.4"
+    "prettier": "^2.7.1",
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.1",
+    "chai": "^4.3.6",
+    "eslint": "^8.23.1",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-standard": "^4.1.0",
-    "mocha": "^8.3.2",
-    "sinon": "^9.2.4"
+    "mocha": "^10.0.0",
+    "sinon": "^14.0.0"
   }
 }

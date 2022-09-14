@@ -1,5 +1,6 @@
 const shell = require('shelljs');
-const prompt = require('./prompt.js');
+const { print } = require('./utils');
+const prompt = require('./prompt');
 
 module.exports = function () {
   const configPairs = [
@@ -10,7 +11,7 @@ module.exports = function () {
   prompt(configPairs, ({ vault, archiveId }) => {
     shell.exec(
       `aws glacier delete-archive --vault-name ${vault} --account-id - --archive-id  ${archiveId} `,
-      (exitCode) => (exitCode === 0 ? console.log('deleted') : console.log('')),
+      exitCode => (exitCode === 0 ? print('deleted') : print(''))
     );
   });
 };

@@ -13,14 +13,14 @@ function prompt(arr, cb) {
         rl.close();
         cb(config);
       } else {
-        rl.question(pair[0], (ans) => {
+        rl.question(pair[0], ans => {
           config[pair[1]] = ans;
           return questions();
         });
       }
     }
     runEach(currentPair);
-  }());
+  })();
 }
 
 module.exports = prompt;
