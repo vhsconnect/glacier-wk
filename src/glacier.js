@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 const prompt = require("./prompt.js");
 const handler = require("./handler.js");
 const inventory = require("./inventory.js");

@@ -5,6 +5,7 @@ function prompt(arr, cb) {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
+    terminal: false
   });
   return (function questions() {
     const currentPair = arr.shift();

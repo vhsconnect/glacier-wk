@@ -1,5 +1,6 @@
 const shell = require('shelljs');
-const treehash = require('./treehash.js');
+const treehash = require('./treehash');
+const { print } = require('./utils');
 
 const u = {};
 
@@ -15,7 +16,7 @@ u.arrayOfRanges = (constant, revolutions, fileSize) => {
     ranges.push(i * constant);
     if (i === revolutions - 1) {
       ranges.push(i * constant + (remainder ? remainder - 1 : constant - 1));
-      console.log(ranges);
+      print(ranges);
       return ranges;
     }
     ranges.push(i * constant + constant - 1);
@@ -32,9 +33,7 @@ u.chunks = (chunksAmount, prefix) => {
       for (let k = 0; k < 26; k++) {
         for (let l = 0; l < 26; l++) {
           if (count === chunksAmount) return chunkNames;
-          chunkNames.push(
-            prefix + alphabet[i] + alphabet[j] + alphabet[k] + alphabet[l],
-          );
+          chunkNames.push(prefix + alphabet[i] + alphabet[j] + alphabet[k] + alphabet[l]);
           count++;
         }
       }
@@ -45,7 +44,7 @@ u.chunks = (chunksAmount, prefix) => {
 // upload each chunk synchronously
 u.cList = (vaultName, ranges, chunks, uploadID) => {
   let counter = -2;
-  return chunks.map((x) => {
+  return chunks.map(x => {
     counter += 2;
     return `aws glacier upload-multipart-part --upload-id ${uploadID} --body ${x} --range 'bytes ${
       ranges[counter]
@@ -61,31 +60,25 @@ u.appendTreehash = function (chunksArr, config) {
 };
 
 u.runUpload = function (config) {
-  const {
-    fileSize, constant, vault, path, uploadId,
-  } = config;
-  console.log('calculating chunks amount');
+  const { fileSize, constant, vault, path, uploadId } = config;
+  print('calculating chunks amount');
   const chunksAmount = Math.ceil(fileSize / constant);
-  console.log('splitting file for multiplart upload');
+  print('splitting file for multiplart upload');
   this.splitZip(path, constant, '_u_');
-  console.log('calculating ranges');
-  const rangesArr = this.arrayOfRanges(
-    Number(constant),
-    chunksAmount,
-    fileSize,
-  );
+  print('calculating ranges');
+  const rangesArr = this.arrayOfRanges(Number(constant), chunksAmount, fileSize);
   const chunksArr = this.chunks(chunksAmount, '_u_');
-  console.log('creating uploading commands');
+  print('creating uploading commands');
   const commandList = this.cList(vault, rangesArr, chunksArr, uploadId);
-  console.log('executing upload commands');
-  commandList.forEach((each) => shell.exec(each));
-  console.log('cleaning up uploaded chunks');
-  shell.exec('find . -name \'_u_*\' | xargs rm');
-  console.log('splitting file to create final checksum');
+  print('executing upload commands');
+  commandList.forEach(each => shell.exec(each));
+  print('cleaning up uploaded chunks');
+  shell.exec("find . -name '_u_*' | xargs rm");
+  print('splitting file to create final checksum');
   this.splitZip(path, 1048576, '_h_');
   const hChunksAmount = Math.ceil(fileSize / 1048576);
   const hChunksArr = this.chunks(hChunksAmount, '_h_');
-  console.log('calculating checksum');
+  print('calculating checksum');
   return this.appendTreehash(hChunksArr, config);
 };
 
@@ -94,14 +87,14 @@ u.pipe = function (fns, value) {
 };
 
 u.confirmChecksum = function (config) {
-  console.log('finalizing upload, confirming checksum');
+  print('finalizing upload, confirming checksum');
   shell.exec(
-    `aws glacier complete-multipart-upload --checksum ${config.checksum} --archive-size ${config.fileSize} --upload-id ${config.uploadId} --account-id - --vault-name ${config.vault} >> archive-info.json`,
+    `aws glacier complete-multipart-upload --checksum ${config.checksum} --archive-size ${config.fileSize} --upload-id ${config.uploadId} --account-id - --vault-name ${config.vault} >> archive-info.json`
   );
 };
 u.cleanup = function () {
-  console.log('cleaning up, archive info appended to archive-info.json');
-  shell.exec('find . -name \'_h_*\' | xargs rm -f');
+  print('cleaning up, archive info appended to archive-info.json');
+  shell.exec("find . -name '_h_*' | xargs rm -f");
   shell.exec('rm init.json');
 };
 

@@ -1,7 +1,6 @@
 const { expect } = require('chai');
-const u = require('../upload.js');
+const u = require('../src/upload');
 
-beforeEach(() => {});
 describe('upload.js', () => {
   describe('arrayOfRanges', () => {
     it('shoud return the right ranges w/ whole revolutions', () => {

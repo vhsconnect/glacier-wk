@@ -1,5 +1,6 @@
 const fs = require('fs');
 const crypto = require('crypto');
+const { print } = require('./utils.js')
 
 function getHashes(refs) {
   return refs.map((fileRef) => {
@@ -17,12 +18,11 @@ function finalHash(twoBuffers) {
     .createHash('sha256')
     .update(Buffer.concat(twoBuffers))
     .digest('hex');
-  // .toString('hex');
 }
 
 module.exports = function treehash(refs) {
   function nextLevel(shaBuffers) {
-    console.log('hashing');
+    print('hashing');
     const newBuffs = [];
     if (shaBuffers.length === 2) return finalHash(shaBuffers);
     for (let i = 0; i < shaBuffers.length; i += 2) {
