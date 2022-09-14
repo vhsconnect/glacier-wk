@@ -1,3 +1,3 @@
 module.exports = {
-  print: console.log
+  print: console.log,
 };

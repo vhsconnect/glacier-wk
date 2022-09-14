@@ -12,8 +12,6 @@ module.exports = function () {
   prompt(configPairs, ({ project, jobType, vault }) => {
     const file = jobType === '0' ? 'inventory-job-id.json' : '';
     const { jobId } = readJSON(`./${project}/${file}`);
-    shell.exec(
-      `aws glacier describe-job --vault-name ${vault} --account-id - --job-id ${jobId}`,
-    );
+    shell.exec(`aws glacier describe-job --vault-name ${vault} --account-id - --job-id ${jobId}`);
   });
 };

@@ -5,7 +5,6 @@ function prompt(arr, cb) {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    terminal: false
   });
   return (function questions() {
     const currentPair = arr.shift();
@@ -14,14 +13,14 @@ function prompt(arr, cb) {
         rl.close();
         cb(config);
       } else {
-        rl.question(pair[0], (ans) => {
+        rl.question(pair[0], ans => {
           config[pair[1]] = ans;
           return questions();
         });
       }
     }
     runEach(currentPair);
-  }());
+  })();
 }
 
 module.exports = prompt;

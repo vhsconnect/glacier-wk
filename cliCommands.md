@@ -21,6 +21,7 @@ aws glacier list-jobs --account-id - --vault-name <my-vault>
 ```console
 aws glacier describe-job --account-id - --vault-name <my-vault> --job-id <job-id>
 ```
+
 - confirm a job's final hash
 
 ```console
@@ -49,6 +50,7 @@ aws glacier initiate-job --account-id - --vault-name <my-vault> --job-parameters
   "SNSTopic": ""
 }
 ```
+
 - download archive
 
 ```console

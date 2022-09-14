@@ -1,9 +1,9 @@
 const shell = require('shelljs');
 
 const initiate = {};
-initiate.init = (config) => {
+initiate.init = config => {
   shell.exec(
-    `aws glacier initiate-multipart-upload --account-id - --archive-description "${config.desc}" --part-size ${config.constant} --vault-name ${config.vault} > init.json`,
+    `aws glacier initiate-multipart-upload --account-id - --archive-description "${config.desc}" --part-size ${config.constant} --vault-name ${config.vault} > init.json`
   );
 };
 

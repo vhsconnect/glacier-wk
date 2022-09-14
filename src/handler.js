@@ -18,7 +18,7 @@ module.exports = function () {
     ['give a desciption to your archive\n', 'desc'],
   ];
 
-  prompt(configPairs, (config) => {
+  prompt(configPairs, config => {
     initiate.init(config);
     config.uploadId = readJSON('init.json').uploadId; // eslint-disable-line no-param-reassign
     upload.uploadAndConfirm(config);
