@@ -1,10 +1,12 @@
 # Glacier-wk
 
+
 Glacier-wk uses to a node run-time to query your glacier vaults for inventory and upload and download archives. Particularly useful for archives that are larger than 1GB as you'll need to perform a multi-part upload. The client is able to perform these actions by leveraging the aws CLI and configuration installed on your computer. Here is a list of what the client can do.
 
 - multipart uploads
 - inventory queries
 - archive downloads
+- more..
 
 ## Limitations
 
